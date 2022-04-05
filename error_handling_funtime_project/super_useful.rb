@@ -6,12 +6,30 @@ end
 # PHASE 3
 FRUITS = ["apple", "banana", "orange"]
 
+class CoffeeError < StandardError
+  def message
+    "I love coffee! Try again."
+  end
+
+end
+
+class OtherError < StandardError
+  def message
+    "That isn't fruit. Goodbye!"
+  end
+
+end
+
+
 def reaction(maybe_fruit)
-  if FRUITS.include? maybe_fruit
-    puts "OMG, thanks so much for the #{maybe_fruit}!"
-  else 
-    raise StandardError 
-  end 
+    if FRUITS.include? maybe_fruit
+     puts "OMG, thanks so much for the #{maybe_fruit}!"
+    elsif maybe_fruit.downcase == "coffee"
+         puts "COFFEEEEE"
+        raise CoffeeError
+    else
+        raise OtherError
+    end
 end
 
 def feed_me_a_fruit
@@ -20,18 +38,28 @@ def feed_me_a_fruit
   puts "Feed me a fruit! (Enter the name of a fruit:)"
   maybe_fruit = gets.chomp
   reaction(maybe_fruit) 
+  rescue CoffeeError => e
+    puts e.message
+    retry
+  rescue OtherError => e
+    puts e.message
+
+
 end  
 
 # PHASE 4
 class BestFriend
   def initialize(name, yrs_known, fav_pastime)
+    raise ArgumentError.new(" 'name' can't be blank") if name == ""
+    raise ArgumentError.new(" 'yrs_known' must be greater than or equal to 5") if yrs_known.to_i < 5
+    raise ArgumentError.new("'fav_pastime' can't be blank") if fav_pastime == ""
     @name = name
     @yrs_known = yrs_known
     @fav_pastime = fav_pastime
   end
 
   def talk_about_friendship
-    puts "Wowza, we've been friends for #{@yrs_known}. Let's be friends for another #{1000 * @yrs_known}."
+    puts "Wowza, we've been friends for #{@yrs_known} years. Let's be friends for another #{1000 * @yrs_known}."
   end
 
   def do_friendstuff
